@@ -1,5 +1,9 @@
 Revision history for DBIx-Class-InflateColumn-Boolean
 
+0.001001  2008-10-22
+	* require DBIx::Class 0.08
+	* POD fixes
+
 0.001000  2008-08-26
 	  First version, released on an unsuspecting world.
 

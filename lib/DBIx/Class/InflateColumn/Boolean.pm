@@ -13,11 +13,11 @@ DBIx::Class::InflateColumn::Boolean - Auto-create boolean objects from columns.
 
 =head1 VERSION
 
-Version 0.001000
+Version 0.001001
 
 =cut
 
-our $VERSION = '0.001000';
+our $VERSION = '0.001001';
 
 =head1 SYNOPSIS
 
@@ -88,18 +88,19 @@ boolean.
 
 It is strongly discouraged to assign a
 L<Contextual::Return|Contextual::Return> object to a boolean field when
-creating a fresh row.
+creating a fresh row, because:
 
 =over 4
 
-=item -E<gt>
+=item KISS (http://en.wikipedia.org/wiki/KISS_principle)
 
-KISS (http://en.wikipedia.org/wiki/KISS_principle)
+Just say "No" when you mean it. It does not buy you anything to say
+C<SCALAR {"No"} BOOL { 0 }>.
 
-=item -E<gt>
+=item Don't rely on the current boolean class
 
-Take the underlying boolean class as a black box that DWIM. It might be
-replaced by something other in future versions of this module.
+Take the underlying boolean class as a black box. It might be replaced by
+something other in future versions of this module.
 
 =back
 
@@ -116,7 +117,7 @@ inflated. Therefore C<NULL> is C<false> and this can not be altered.
 =head2 true_is
 
   __PACKAGE__->true_is('Y');
-  __PACKAGE__->true_is(['Y', 'y');
+  __PACKAGE__->true_is(['Y', 'y']);
   __PACKAGE__->true_is(qr/^(y|yes|true|1)$/i);
 
 Gets/sets the possible values for C<true> data in this table.
@@ -129,7 +130,7 @@ for what is C<true> when neither C<true_is> nor L</false_is> are set.
 =head2 false_is
 
   __PACKAGE__->false_is('N');
-  __PACKAGE__->false_is(['N', 'n');
+  __PACKAGE__->false_is(['N', 'n']);
   __PACKAGE__->false_is(qr/^(n|no|false|0)$/i);
 
 Gets/sets the possible values for C<false> data in this table.

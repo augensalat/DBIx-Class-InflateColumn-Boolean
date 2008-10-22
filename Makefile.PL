@@ -5,7 +5,7 @@ license 'perl';
 all_from 'lib/DBIx/Class/InflateColumn/Boolean.pm';
 author   'Bernhard Graf <perl-misc@movingtarget.de>';
 
-requires 'DBIx::Class' => 0.07005;
+requires 'DBIx::Class' => 0.08;
 requires 'Contextual::Return';
 
 test_requires 'Test::More';
