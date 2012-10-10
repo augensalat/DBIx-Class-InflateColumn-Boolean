@@ -17,7 +17,7 @@ Version 0.001001
 
 =cut
 
-our $VERSION = '0.001001';
+our $VERSION = '0.002000';
 
 =head1 SYNOPSIS
 
@@ -171,21 +171,21 @@ sub register_column {
 		    $ref eq '' ?
 			sub {
 			    my $x = shift;
-			    SCALAR { $x } BOOL { $x eq $false_is ? 0 : 1 };
+			    BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $false_is ? 0 : 1 };
 			} :
 			$ref eq 'ARRAY' ?
 			    sub {
 				my $x = shift;
 				for (@$false_is) {
-				    return SCALAR { $x } BOOL { 0 }
+				    return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 }
 					if $x eq $_;
 				}
-				SCALAR { $x } BOOL { 1 };
+				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 };
 			    } :
 			    # $ref eq 'Regexp'
 			    sub {
 				my $x = shift;
-				SCALAR { $x } BOOL { $x =~ $false_is ? 0 : 1 };
+				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $false_is ? 0 : 1 };
 			    },
 		deflate => sub { shift },
 	    }
@@ -199,21 +199,21 @@ sub register_column {
 		    $ref eq '' ?
 			sub {
 			    my $x = shift;
-			    SCALAR { $x } BOOL { $x eq $true_is ? 1 : 0 };
+			    BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $true_is ? 1 : 0 };
 			} :
 			$ref eq 'ARRAY' ?
 			    sub {
 				my $x = shift;
 				for (@$true_is) {
-				    return SCALAR { $x } BOOL { 1 }
+				    return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 }
 					if $x eq $_;
 				}
-				SCALAR { $x } BOOL { 0 };
+				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 };
 			    } :
 			    # $ref eq 'Regexp'
 			    sub {
 				my $x = shift;
-				SCALAR { $x } BOOL { $x =~ $true_is ? 1 : 0 };
+				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $true_is ? 1 : 0 };
 			    },
 		deflate => sub { shift },
 	    }
