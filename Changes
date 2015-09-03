@@ -1,5 +1,8 @@
 Revision history for DBIx-Class-InflateColumn-Boolean
 
+0.002001  2015-09-03
+	* Whitespace fixes.
+
 0.002000  2012-10-11
 	* Fix issues with Contextual::Return >= 0.004004 (dconway)
 	* require Contextual::Return >= 0.004007

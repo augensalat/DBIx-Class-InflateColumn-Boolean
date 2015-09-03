@@ -1,7 +1,7 @@
 use inc::Module::Install;
 
 name     'DBIx-Class-InflateColumn-Boolean';
-license 'perl';
+license  'perl';
 all_from 'lib/DBIx/Class/InflateColumn/Boolean.pm';
 author   'Bernhard Graf <perl-misc@movingtarget.de>';
 

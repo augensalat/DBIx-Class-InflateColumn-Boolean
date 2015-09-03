@@ -13,45 +13,45 @@ DBIx::Class::InflateColumn::Boolean - Auto-create boolean objects from columns.
 
 =head1 VERSION
 
-Version 0.001001
+Version 0.002001
 
 =cut
 
-our $VERSION = '0.002000';
+our $VERSION = '0.002001';
 
 =head1 SYNOPSIS
 
 Load this component and declare columns as boolean values.
 
-    package Table;
-    __PACKAGE__->load_components(qw/InflateColumn::Boolean Core/);
-    __PACKAGE__->table('table');
-    __PACKAGE__->true_is('Y');
-    __PACKAGE__->add_columns(
-        foo => {
-            data_type => 'varchar',
-            is_boolean  => 1,
-        },
-        bar => {
-            data_type => 'varchar',
-            is_boolean  => 1,
-            true_is     => qr/^(?:yes|ja|oui|si)$/i,
-        },
-        baz => {
-            data_type => 'int',
-            is_boolean  => 1,
-            false_is    => ['0', '-1'],
-        },
-    );
+  package Table;
+  __PACKAGE__->load_components(qw/InflateColumn::Boolean Core/);
+  __PACKAGE__->table('table');
+  __PACKAGE__->true_is('Y');
+  __PACKAGE__->add_columns(
+      foo => {
+          data_type => 'varchar',
+          is_boolean  => 1,
+      },
+      bar => {
+          data_type => 'varchar',
+          is_boolean  => 1,
+          true_is     => qr/^(?:yes|ja|oui|si)$/i,
+      },
+      baz => {
+          data_type => 'int',
+          is_boolean  => 1,
+          false_is    => ['0', '-1'],
+      },
+  );
 
 Then you can treat the specified column as a boolean:
 
-    print 'table.foo is ', $table->foo ? 'true' : 'false', "\n";
-    print 'table.bar is ', $table->bar ? 'true' : 'false', "\n";
+  print 'table.foo is ', $table->foo ? 'true' : 'false', "\n";
+  print 'table.bar is ', $table->bar ? 'true' : 'false', "\n";
 
 The boolean object still stringifies to the actual field value:
 
-    print $table->foo;  # prints "Y" if it is true
+  print $table->foo;  # prints "Y" if it is true
 
 =head1 DESCRIPTION
 
@@ -151,73 +151,75 @@ users.
 
 sub register_column {
     my ($self, $column, $info, @rest) = @_;
+
     $self->next::method($column, $info, @rest);
 
     return unless defined $info->{'is_boolean'};
 
     my ($true_is, $false_is);
+
     defined($true_is = $info->{true_is})
-	or defined($false_is = $info->{false_is})
-	or defined($true_is = $self->true_is)
-	or defined($false_is = $self->false_is)
-	or $true_is = qr/^(y|yes|true|1)$/i;
+        or defined($false_is = $info->{false_is})
+        or defined($true_is = $self->true_is)
+        or defined($false_is = $self->false_is)
+        or $true_is = qr/^(y|yes|true|1)$/i;
 
     my $ref;
     if (defined $false_is) {	# column is false-specific
-	$ref = ref $false_is;
-	$self->inflate_column(
-	    $column => {
-		inflate =>
-		    $ref eq '' ?
-			sub {
-			    my $x = shift;
-			    BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $false_is ? 0 : 1 };
-			} :
-			$ref eq 'ARRAY' ?
-			    sub {
-				my $x = shift;
-				for (@$false_is) {
-				    return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 }
-					if $x eq $_;
-				}
-				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 };
-			    } :
-			    # $ref eq 'Regexp'
-			    sub {
-				my $x = shift;
-				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $false_is ? 0 : 1 };
-			    },
-		deflate => sub { shift },
-	    }
-	);
+        $ref = ref $false_is;
+        $self->inflate_column(
+            $column => {
+                inflate =>
+                    $ref eq '' ?
+                        sub {
+                            my $x = shift;
+                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $false_is ? 0 : 1 };
+                        } :
+                    $ref eq 'ARRAY' ?
+                        sub {
+                            my $x = shift;
+                            for (@$false_is) {
+                                return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 }
+                                if $x eq $_;
+                            }
+                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 };
+                        } :
+                        # $ref eq 'Regexp'
+                        sub {
+                            my $x = shift;
+                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $false_is ? 0 : 1 };
+                        },
+                deflate => sub { shift },
+            }
+        );
     }
     else {			# column is true-specific
-	$ref = ref $true_is;
-	$self->inflate_column(
-	    $column => {
-		inflate =>
-		    $ref eq '' ?
-			sub {
-			    my $x = shift;
-			    BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $true_is ? 1 : 0 };
-			} :
-			$ref eq 'ARRAY' ?
-			    sub {
-				my $x = shift;
-				for (@$true_is) {
-				    return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 }
-					if $x eq $_;
-				}
-				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 };
-			    } :
-			    # $ref eq 'Regexp'
-			    sub {
-				my $x = shift;
-				BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $true_is ? 1 : 0 };
-			    },
-		deflate => sub { shift },
-	    }
-	);
+        $ref = ref $true_is;
+        $self->inflate_column(
+            $column => {
+                inflate =>
+                    $ref eq '' ?
+                        sub {
+                            my $x = shift;
+                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $true_is ? 1 : 0 };
+                        } :
+                    $ref eq 'ARRAY' ?
+                        sub {
+                            my $x = shift;
+                            for (@$true_is) {
+                                return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 }
+                                if $x eq $_;
+                            }
+                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 };
+                        } :
+                        # $ref eq 'Regexp'
+                        sub {
+                            my $x = shift;
+                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $true_is ? 1 : 0 };
+                        },
+                deflate => sub { shift },
+            }
+        );
     }
 }
 
@@ -237,13 +239,16 @@ Bernhard Graf C<< <graf at cpan.org> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-dbix-class-inflatecolumn-bool at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=DBIx-Class-InflateColumn-Boolean>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to
+C<bug-dbix-class-inflatecolumn-bool at rt.cpan.org>, or through the web
+interface at
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=DBIx-Class-InflateColumn-Boolean>.
+I will be notified, and then you'll automatically be notified of
+progress on your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Bernhard Graf, all rights reserved.
+Copyright 2008-2015 Bernhard Graf, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

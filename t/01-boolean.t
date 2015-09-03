@@ -10,9 +10,9 @@ BEGIN {
 
     eval 'require DBD::SQLite';
     if ($@) {
-	plan skip_all => 'DBD::SQLite not installed';
+        plan skip_all => 'DBD::SQLite not installed';
     } else {
-	plan tests => 30;
+        plan tests => 30;
     }
 };
 
