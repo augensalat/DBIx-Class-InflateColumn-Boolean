@@ -6,7 +6,6 @@ all_from 'lib/DBIx/Class/InflateColumn/Boolean.pm';
 author   'Bernhard Graf <perl-misc@movingtarget.de>';
 
 requires 'DBIx::Class' => 0.08;
-requires 'Contextual::Return' => 0.004007;
 
 test_requires 'Test::More';
 test_requires 'Scalar::Util';
