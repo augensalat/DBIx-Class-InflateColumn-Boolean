@@ -1,4 +1,6 @@
 Revision history for DBIx-Class-InflateColumn-Boolean
+        * replace Contextual::Return with
+         DBIx::Class::InflateColumn::Boolean::Value object (RT#100827)
 
 0.002001  2015-09-03
 	* Whitespace fixes.

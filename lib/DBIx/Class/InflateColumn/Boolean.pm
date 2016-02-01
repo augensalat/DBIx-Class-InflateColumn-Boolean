@@ -5,8 +5,6 @@ use strict;
 
 use base qw/DBIx::Class/;
 
-use Contextual::Return;
-
 =head1 NAME
 
 DBIx::Class::InflateColumn::Boolean - Auto-create boolean objects from columns.
@@ -65,20 +63,17 @@ But for a database it is up to the designer to decide what is C<true>
 and what is C<false>.
 
 This module maps such "database booleans" into "Perl booleans" and back
-by inflating designated columns into some sort of boolean objects, that
-happen to be instances of L<Contextual::Return::Value|Contextual::Return>.
-Objects of this class can store the original value and a boolean meaning
-at the same time. Therefore - if C<Yes> in the database means C<true>
-and C<No> means C<false> in the application the following two lines can
-virtually mean the same:
+by inflating designated columns into objects that store the original value,
+but also evaluate as true or false in boolean context.  Therefore - if
+C<Yes> in the database means C<true> and C<No> means C<false> in the
+application the following two lines can virtually mean the same:
 
   if ($table->field eq "No") { ... }
   if (not $table->field) { ... }
 
 That means that C<< $table->field >> has the scalar value C<"No">, but
-is taken as C<false> in a boolean context, whereas without the little
-magic from L<Contextual::Return|Contextual::Return> Perl would regard
-the string C<"No"> as C<true>.
+is taken as C<false> in a boolean context, whereas Perl would normally
+regardthe string C<"No"> as C<true>.
 
 When writing to the database, of course C<< $table->field >> would be
 deflated to the original value C<"No"> and not some Perlish form of a
@@ -86,16 +81,14 @@ boolean.
 
 =head2 Important Notice
 
-It is strongly discouraged to assign a
-L<Contextual::Return|Contextual::Return> object to a boolean field when
-creating a fresh row, because:
+It is strongly encouraged to assign normal database values to a boolean
+field when creating a fresh row, because:
 
 =over 4
 
 =item KISS (http://en.wikipedia.org/wiki/KISS_principle)
 
-Just say "No" when you mean it. It does not buy you anything to say
-C<SCALAR {"No"} BOOL { 0 }>.
+Just say "No" when you mean it.
 
 =item Don't rely on the current boolean class
 
@@ -173,21 +166,21 @@ sub register_column {
                     $ref eq '' ?
                         sub {
                             my $x = shift;
-                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $false_is ? 0 : 1 };
+                            DBIx::Class::InflateColumn::Boolean::Value->new($x, $x ne $false_is);
                         } :
                     $ref eq 'ARRAY' ?
                         sub {
                             my $x = shift;
                             for (@$false_is) {
-                                return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 }
+                                return DBIx::Class::InflateColumn::Boolean::Value->new($x, 0)
                                 if $x eq $_;
                             }
-                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 };
+                            DBIx::Class::InflateColumn::Boolean::Value->new($x, 1)
                         } :
                         # $ref eq 'Regexp'
                         sub {
                             my $x = shift;
-                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $false_is ? 0 : 1 };
+                            DBIx::Class::InflateColumn::Boolean::Value->new($x, $x !~ $false_is);
                         },
                 deflate => sub { shift },
             }
@@ -201,25 +194,41 @@ sub register_column {
                     $ref eq '' ?
                         sub {
                             my $x = shift;
-                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x eq $true_is ? 1 : 0 };
+                            DBIx::Class::InflateColumn::Boolean::Value->new($x, $x eq $true_is);
                         } :
                     $ref eq 'ARRAY' ?
                         sub {
                             my $x = shift;
                             for (@$true_is) {
-                                return BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 1 }
+                                return DBIx::Class::InflateColumn::Boolean::Value->new($x, 1)
                                 if $x eq $_;
                             }
-                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { 0 };
+                            DBIx::Class::InflateColumn::Boolean::Value->new($x, 0)
                         } :
                         # $ref eq 'Regexp'
                         sub {
                             my $x = shift;
-                            BLESSED { 'Contextual::Return::Value' } SCALAR { $x } BOOL { $x =~ $true_is ? 1 : 0 };
+                            DBIx::Class::InflateColumn::Boolean::Value->new($x, $x =~ $true_is)
                         },
                 deflate => sub { shift },
             }
         );
+    }
+}
+
+{
+    package #hide
+        DBIx::Class::InflateColumn::Boolean::Value;
+
+    use overload
+        '""' => sub { $_[0][0] },
+        'bool' => sub { $_[0][1] },
+        fallback => 1,
+    ;
+
+    sub new {
+        my ($class, $value, $bool) = @_;
+        my $self = bless [$value, !!$bool], $class;
     }
 }
 
@@ -229,7 +238,6 @@ __END__
 
 =head1 SEE ALSO
 
-L<Contextual::Return>,
 L<DBIx::Class>,
 L<DBIx::Class::InflateColumn>
 
