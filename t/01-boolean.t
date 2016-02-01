@@ -38,9 +38,9 @@ ok(blessed($true->foo), '$true->foo has been inflated into an object');
 ok(blessed($true->bar), '$true->bar has been inflated into an object');
 ok(blessed($true->baz), '$true->baz has been inflated into an object');
 
-ok(blessed($true->foo) && ref($true->foo) eq 'Contextual::Return::Value', 'ref($true->foo) eq "Contextual::Return::Value"');
-ok(blessed($true->bar) && ref($true->bar) eq 'Contextual::Return::Value', 'ref($true->bar) eq "Contextual::Return::Value"');
-ok(blessed($true->baz) && ref($true->baz) eq 'Contextual::Return::Value', 'ref($true->baz) eq "Contextual::Return::Value"');
+ok(blessed($true->foo) && ref($true->foo) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($true->foo) eq "DBIx::Class::InflateColumn::Boolean::Value"');
+ok(blessed($true->bar) && ref($true->bar) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($true->bar) eq "DBIx::Class::InflateColumn::Boolean::Value"');
+ok(blessed($true->baz) && ref($true->baz) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($true->baz) eq "DBIx::Class::InflateColumn::Boolean::Value"');
 
 is($true->foo, 'Y', '$true->foo eq "Y"');
 is($true->bar, 'oui', '$true->bar eq "oui"');
@@ -54,9 +54,9 @@ ok(blessed($false->foo), '$false->foo has been inflated into an object');
 ok(blessed($false->bar), '$false->bar has been inflated into an object');
 ok(blessed($false->baz), '$false->baz has been inflated into an object');
 
-ok(blessed($false->foo) && ref($false->foo) eq 'Contextual::Return::Value', 'ref($true->foo) eq "Contextual::Return::Value"');
-ok(blessed($false->bar) && ref($false->bar) eq 'Contextual::Return::Value', 'ref($true->bar) eq "Contextual::Return::Value"');
-ok(blessed($false->baz) && ref($false->baz) eq 'Contextual::Return::Value', 'ref($true->baz) eq "Contextual::Return::Value"');
+ok(blessed($false->foo) && ref($false->foo) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($true->foo) eq "DBIx::Class::InflateColumn::Boolean::Value"');
+ok(blessed($false->bar) && ref($false->bar) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($true->bar) eq "DBIx::Class::InflateColumn::Boolean::Value"');
+ok(blessed($false->baz) && ref($false->baz) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($true->baz) eq "DBIx::Class::InflateColumn::Boolean::Value"');
 
 is($false->foo, 'N', '$false->foo eq "N"');
 is($false->bar, 'non', '$false->bar eq "non"');
@@ -71,7 +71,7 @@ $false->update;
 
 my $row = $rs->find(2);	# re-read 2nd row 
 ok(blessed($row->bar), '$row->bar has been inflated into an object');
-ok(blessed($row->bar) && ref($row->bar) eq 'Contextual::Return::Value', 'ref($row->bar) eq "Contextual::Return::Value"');
+ok(blessed($row->bar) && ref($row->bar) eq 'DBIx::Class::InflateColumn::Boolean::Value', 'ref($row->bar) eq "DBIx::Class::InflateColumn::Boolean::Value"');
 is($row->bar, 'oui', '$row->bar eq "oui"');
 ok($row->bar, '$true->bar is row');
 ok(!blessed($row->get_column('bar')), '$row->get_column("bar") is not blessed');
