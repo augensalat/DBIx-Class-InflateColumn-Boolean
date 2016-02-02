@@ -5,6 +5,7 @@ Revision history for DBIx-Class-InflateColumn-Boolean
 	  DBIx::Class::InflateColumn::Boolean::Value object
 	  (RT#100827, haarg, abraxxa)
 	* Enable Travis CI.
+	* Replace README by a gentle introduction in Markdown format.
 
 0.002001  2015-09-03
 	* Whitespace fixes.
