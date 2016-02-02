@@ -11,11 +11,11 @@ DBIx::Class::InflateColumn::Boolean - Auto-create boolean objects from columns.
 
 =head1 VERSION
 
-Version 0.002001
+Version 0.003000
 
 =cut
 
-our $VERSION = '0.002001';
+our $VERSION = '0.003000';
 
 =head1 SYNOPSIS
 
