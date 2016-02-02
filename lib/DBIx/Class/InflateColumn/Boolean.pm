@@ -65,18 +65,18 @@ and what is C<false>.
 This module maps such "database booleans" into "Perl booleans" and back
 by inflating designated columns into objects that store the original value,
 but also evaluate as true or false in boolean context.  Therefore - if
-C<Yes> in the database means C<true> and C<No> means C<false> in the
+"Yes" in the database means C<true> and "No" means C<false> in the
 application the following two lines can virtually mean the same:
 
   if ($table->field eq "No") { ... }
   if (not $table->field) { ... }
 
-That means that C<< $table->field >> has the scalar value C<"No">, but
+That means that C<< $table->field >> has the scalar value "No", but
 is taken as C<false> in a boolean context, whereas Perl would normally
-regardthe string C<"No"> as C<true>.
+regard the string "No" as C<true>.
 
 When writing to the database, of course C<< $table->field >> would be
-deflated to the original value C<"No"> and not some Perlish form of a
+deflated to the original value "No" and not some Perlish form of a
 boolean.
 
 =head2 Important Notice
@@ -243,20 +243,18 @@ L<DBIx::Class::InflateColumn>
 
 =head1 AUTHOR
 
-Bernhard Graf C<< <graf at cpan.org> >>
+Bernhard Graf
 
 =head1 BUGS
 
-Please report any bugs or feature requests to
-C<bug-dbix-class-inflatecolumn-bool at rt.cpan.org>, or through the web
-interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=DBIx-Class-InflateColumn-Boolean>.
+Please report any bugs or feature requests through the web interface at
+L<https://github.com/augensalat/DBIx-Class-InflateColumn-Boolean/issues>.
 I will be notified, and then you'll automatically be notified of
 progress on your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008-2015 Bernhard Graf, all rights reserved.
+Copyright 2008-2016 Bernhard Graf, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
