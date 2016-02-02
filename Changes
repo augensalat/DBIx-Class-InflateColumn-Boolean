@@ -4,6 +4,7 @@ Revision history for DBIx-Class-InflateColumn-Boolean
 	* Replace Contextual::Return with a light-weight
 	  DBIx::Class::InflateColumn::Boolean::Value object
 	  (RT#100827, haarg, abraxxa)
+	* Enable Travis CI.
 
 0.002001  2015-09-03
 	* Whitespace fixes.
