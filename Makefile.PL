@@ -1,20 +1,31 @@
-use inc::Module::Install;
+use strict;
+use warnings;
 
-name     'DBIx-Class-InflateColumn-Boolean';
-license  'perl';
-all_from 'lib/DBIx/Class/InflateColumn/Boolean.pm';
-author   'Bernhard Graf <perl-misc@movingtarget.de>';
+use ExtUtils::MakeMaker;
 
-requires 'DBIx::Class' => 0.08;
-
-test_requires 'Test::More';
-test_requires 'Scalar::Util';
-test_requires 'Path::Class';
-test_requires 'SQL::Translator';
-
-recommends 'DBD::SQLite' => '1.11';
-
-auto_install;
-
-WriteAll;
-
+WriteMakefile(
+    NAME           => 'DBIx::Class::InflateColumn::Boolean',
+    VERSION_FROM   => 'lib/DBIx/Class/InflateColumn/Boolean.pm',
+    ABSTRACT       => 'Auto-create boolean objects from columns',
+    AUTHOR         => 'Bernhard Graf',
+    LICENSE        => 'perl_5',
+    META_MERGE     => {
+	requires  => {perl => '5.008003'},
+	resources => {
+	    license    => 'http://dev.perl.org/licenses/',
+	    bugtracker => 'https://github.com/augensalat/DBIx-Class-InflateColumn-Boolean/issues',
+	    repository => 'https://github.com/augensalat/DBIx-Class-InflateColumn-Boolean.git',
+	},
+    },
+    PREREQ_PM => {
+	'DBIx::Class' => '0.08',
+    },
+    TEST_REQUIRES => {
+	'DBIx::Class'     => '0.08',
+	'Path::Class'     => 0,
+	'Scalar::Util'    => 0,
+	'SQL::Translator' => 0,
+	'Test::More'      => 0,
+    },
+    test           => {TESTS => 't/*.t'}
+);
